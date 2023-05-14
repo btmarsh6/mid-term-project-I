@@ -50,23 +50,52 @@ def clean_passengers_df(filepath):
     return passengers_df
 
 
+def clean_flights_df(filepath):
+    '''
+    Given local filepath of flights.csv, imports and cleans  file, then returns final dataframe. 
+    '''
+
+    import numpy as np
+    import pandas as pd
+
+    # import data
+    flights_df = pd.read_csv(filepath)
+
+    # convert date and time columns to datetime format. Split date into year, month, date
+    flights_df['fl_date'] = pd.to_datetime(flights_df['fl_date'], format='%Y-%m-%d')
+    flights_df['crs_dep_time'] = pd.to_datetime(flights_df['crs_dep_time'], format='%H%M', errors='coerce').dt.time
+    flights_df['crs_arr_time'] = pd.to_datetime(flights_df['crs_arr_time'], format='%H%M', errors='coerce').dt.time
+
+    flights_df['fl_day'] = pd.DatetimeIndex(flights_df['fl_date']).day
+    flights_df['fl_month'] = pd.DatetimeIndex(flights_df['fl_date']).month
+    flights_df['fl_year'] = pd.DatetimeIndex(flights_df['fl_date']).year
+    flights_df.drop(columns='fl_date', inplace=True)
+
+    # drop useless columns
+    flights_df.drop(columns=[])
+    return flights_df
+
+
+
 def avg_passengers(flights_df, passengers_df):
     '''
     Adds two columns to the flights_df dataframe: 'route' = 'origin' to 'dest' and 'monthly_avg_passengers' - the average number of
     passengers per month on that route.
     '''
+    import numpy as np
+    import pandas as pd
+
     # find averages from passengers_df
     passengers_df['route'] = passengers_df['origin'] + ' to ' + passengers_df['dest']
     route_month_avg_dict = passengers_df.groupby(['route', 'month'])['passengers'].mean().to_dict()
 
 
-    # create route and temporary mapping columns on flights_df
+    # create route and mapping columns on flights_df
     flights_df['route'] = flights_df['origin'] + ' to ' + flights_df['dest']
-    flights_df['month'] = pd.DatetimeIndex(flights_df['fl_date']).month
-    flights_df['map_key'] = list(zip(flights_df['route'], flights_df['month']))
+    flights_df['map_key'] = list(zip(flights_df['route'], flights_df['fl_month']))
 
-    # map averages into new column then delete map column
+    # map averages into new column then delete route and map columns
     flights_df['monthly_avg_passengers'] = flights_df['map_key'].map(route_month_avg_dict)
-    flights_df.drop(columns=['map_key', 'month'], inplace=True)
+    flights_df.drop(columns=['route', 'map_key'], inplace=True)
 
     return flights_df 
