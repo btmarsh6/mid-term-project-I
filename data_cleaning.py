@@ -2,7 +2,7 @@ def clean_fuel_df(filepath):
     '''
     Given local filepath of fuel_consumption.csv, imports and cleans  file, then returns final dataframe. 
     '''
-    import numpy as np
+
     import pandas as pd
     
     # import data
@@ -26,6 +26,8 @@ def clean_fuel_df(filepath):
     # drop remaining rows with null values.
     fuel_df.dropna(inplace=True)
 
+    # drop unneeded columns
+    fuel_df.drop(columns=['carrier', 'carrier_name'])
     return fuel_df
 
 
@@ -35,7 +37,6 @@ def clean_passengers_df(filepath):
     Given local filepath of passengers.csv, imports and cleans  file, then returns final dataframe. 
     '''
 
-    import numpy as np
     import pandas as pd
 
     # import data
@@ -55,7 +56,6 @@ def clean_flights_df(filepath):
     Given local filepath of flights.csv, imports and cleans  file, then returns final dataframe. 
     '''
 
-    import numpy as np
     import pandas as pd
 
     # import data
@@ -79,15 +79,14 @@ def clean_flights_df(filepath):
 
 def avg_passengers(flights_df, passengers_df):
     '''
-    Adds two columns to the flights_df dataframe: 'route' = 'origin' to 'dest' and 'monthly_avg_passengers' - the average number of
-    passengers per month on that route.
+    Adds column to flights_df: 'monthly_avg_passengers' - the average number of passengers per month on that route.
     '''
-    import numpy as np
+    
     import pandas as pd
 
     # find averages from passengers_df
     passengers_df['route'] = passengers_df['origin'] + ' to ' + passengers_df['dest']
-    route_month_avg_dict = passengers_df.groupby(['route', 'month'])['passengers'].mean().to_dict()
+    route_month_avg_dict = round(passengers_df.groupby(['route', 'month'])['passengers'].mean(), 0).to_dict()
 
 
     # create route and mapping columns on flights_df
@@ -99,3 +98,31 @@ def avg_passengers(flights_df, passengers_df):
     flights_df.drop(columns=['route', 'map_key'], inplace=True)
 
     return flights_df 
+
+
+def avg_fuel_use(flights_df, fuel_df):
+    '''
+    Adds two columns to flights_df 'avg_monthly_fuel_cost' and 'avg_monthly_fuel_gallons' - The average fuel consumption for
+    that carrier for that month.
+    '''
+
+    import pandas as pd
+
+    # find averages from fuel_df
+    carrier_month_avg_gallons_dict = round(fuel_df.groupby(['unique_carrier', 'month'])['total_gallons'].mean(), 0).to_dict()
+    carrier_month_avg_cost_dict = round(fuel_df.groupby(['unique_carrier', 'month'])['total_cost'].mean(), 0).to_dict()
+
+    # create mapping column on flights_df
+    flights_df['map_key'] = list(zip(flights_df['mkt_unique_carrier'], flights_df['fl_month']))
+
+    # map averages into new columns then delete map_key column
+    flights_df['avg_monthly_fuel_gallons'] = flights_df['map_key'].map(carrier_month_avg_gallons_dict)
+    flights_df['avg_monthly_fuel_cost'] = flights_df['map_key'].map(carrier_month_avg_cost_dict)
+    flights_df.drop(columns='map_key', inplace=True)
+
+    return flights_df
+
+
+def import_flights_test(filepath):
+    col_names = ['fl_date', 'mkt_unique_carrier', 'branded_code_share', 'mkt_carrier', 'mkt_carrier_fl_num', 'op_unique_carrier', 'tail_num', 'op_carrier_fl_num', 'origin_airport_id', 'origin', 'origin_city_name', 'dest_airport_id', 'dest', 'dest_city_name', 'crs_dep_time', 'crs_arr_time', 'dup', 'crs_elapsed_time', 'flights', 'distance']
+    flights_test = pd.read_csv(filepaths, header=None, names=col_names)
