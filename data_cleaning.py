@@ -124,5 +124,9 @@ def avg_fuel_use(flights_df, fuel_df):
 
 
 def import_flights_test(filepath):
+    import pandas as pd
+    
     col_names = ['fl_date', 'mkt_unique_carrier', 'branded_code_share', 'mkt_carrier', 'mkt_carrier_fl_num', 'op_unique_carrier', 'tail_num', 'op_carrier_fl_num', 'origin_airport_id', 'origin', 'origin_city_name', 'dest_airport_id', 'dest', 'dest_city_name', 'crs_dep_time', 'crs_arr_time', 'dup', 'crs_elapsed_time', 'flights', 'distance']
-    flights_test = pd.read_csv(filepaths, header=None, names=col_names)
+    flights_test = pd.read_csv(filepath, header=None, names=col_names)
+
+    return flights_test
