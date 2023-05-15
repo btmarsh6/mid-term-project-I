@@ -91,7 +91,7 @@ def avg_passengers(flights_df, passengers_df):
 
     # create route and mapping columns on flights_df
     flights_df['route'] = flights_df['origin'] + ' to ' + flights_df['dest']
-    flights_df['map_key'] = list(zip(flights_df['route'], flights_df['fl_month']))
+    flights_df['map_key'] = list(zip(flights_df['route'], flights_df['month']))
 
     # map averages into new column then delete route and map columns
     flights_df['monthly_avg_passengers'] = flights_df['map_key'].map(route_month_avg_dict)
@@ -113,7 +113,7 @@ def avg_fuel_use(flights_df, fuel_df):
     carrier_month_avg_cost_dict = round(fuel_df.groupby(['unique_carrier', 'month'])['total_cost'].mean(), 0).to_dict()
 
     # create mapping column on flights_df
-    flights_df['map_key'] = list(zip(flights_df['mkt_unique_carrier'], flights_df['fl_month']))
+    flights_df['map_key'] = list(zip(flights_df['mkt_unique_carrier'], flights_df['month']))
 
     # map averages into new columns then delete map_key column
     flights_df['avg_monthly_fuel_gallons'] = flights_df['map_key'].map(carrier_month_avg_gallons_dict)
