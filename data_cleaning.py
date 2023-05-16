@@ -143,13 +143,16 @@ def avg_carrier_arr_delay(flights_df):
 
 def avg_taxi_time(flights_df):
     '''
-    Given flights_df dataframe, calculate the average taxi time for each hour. Add taxi_mean_time column to dataframe.
+    Given flights_df dataframe, calculate the average taxi time for each hour. Add taxi_dep_mean_time and
+    taxi_arr_mean_time columns to dataframe.
     '''
     import pandas as pd
-    # Convert 'dep_time' to datetime format
+    # Convert 'dep_time' and 'arr_time' to datetime format
     flights_df['dep_time'] = pd.to_datetime(flights_df['dep_time'], format='%H%M', errors='coerce')
+    flights_df['arr_time'] = pd.to_datetime(flights_df['arr_time'], format='%H%M', errors='coerce')
 
     # Calculate mean taxi time per hour
-    flights_df['taxi_mean_time'] = flights_df.groupby(flights_df['dep_time'].dt.hour)['taxi_out'].transform('mean')
+    flights_df['taxi_dep_mean_time'] = round(flights_df.groupby(flights_df['dep_time'].dt.hour)['taxi_out'].transform('mean'), 2)
+    flights_df['taxi_arr_mean_time'] = round(flights_df.groupby(flights_df['arr_time'].dt.hour)['taxi_in'].transform('mean'), 2)
 
     return flights_df
