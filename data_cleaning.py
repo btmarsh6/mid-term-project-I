@@ -66,10 +66,10 @@ def clean_flights_df(filepath):
     flights_df['crs_dep_time'] = pd.to_datetime(flights_df['crs_dep_time'], format='%H%M', errors='coerce').dt.time
     flights_df['crs_arr_time'] = pd.to_datetime(flights_df['crs_arr_time'], format='%H%M', errors='coerce').dt.time
 
-    flights_df['fl_day'] = pd.DatetimeIndex(flights_df['fl_date']).day
-    flights_df['fl_month'] = pd.DatetimeIndex(flights_df['fl_date']).month
-    flights_df['fl_year'] = pd.DatetimeIndex(flights_df['fl_date']).year
-    flights_df.drop(columns='fl_date', inplace=True)
+    flights_df['day'] = pd.DatetimeIndex(flights_df['fl_date']).day
+    flights_df['month'] = pd.DatetimeIndex(flights_df['fl_date']).month
+    flights_df['year'] = pd.DatetimeIndex(flights_df['fl_date']).year
+  
 
     # drop useless columns
     flights_df.drop(columns=[])
@@ -130,3 +130,10 @@ def import_flights_test(filepath):
     flights_test = pd.read_csv(filepath, header=None, names=col_names)
 
     return flights_test
+
+
+def avg_carrier_arr_delay(flights_df):
+    avg_carrier_arr_delay_dict = round(flights_df.groupby('op_unique_carrier')['arr_delay'].mean(), 2).to_dict()
+    flights_df['avg_carrier_arr_delay'] = flights_df['op_unique_carrier'].map(avg_carrier_arr_delay_dict)
+
+    return flights_df
