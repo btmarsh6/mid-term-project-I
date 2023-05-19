@@ -50,3 +50,54 @@ The main goal of this presentation is to prepare you for your **Demo Day** at th
 ### How to Start
 
 You should spend some time with the datasets on your own. Try to look for interesting relationships and information inside the tables. Once you are familiar with the data and information in there you can move on to the EDA tasks from us that will further help you to get familiar with the datasets. Afterward, you can move onto the data preparation and modeling steps. Make sure you have enough time to prepare you slides and presentation at the end.
+
+
+### Process
+
+1. Import the data sets from the Postgres DB
+2. Data Cleaning and EDA
+3. Feature Engineering Discussion
+4. Sample Data
+5. Encode Categorical Variables
+6. Train/Test Split
+7. Add Engineered Features
+8. Scale/Normalize Data
+9. Train and Evaluate Model (repeated for various model types)
+10. Predictions Based on Best Model
+
+### Feature Engineering
+After an initial exploration of the data, we discussed other possible features we could engineer from the different datasets. We considered what sorts of things could potentially lead to flight delays and created several additional features to use in our modeling:
+* **Average Monthly Passengers** - the average number of passengers each month on a given route.
+    Our hypothesis: Flights along popular routes with more passengers may have more delays .
+* **Average Monthly Fuel** - the average amount of fuel each carrier consumes each month. We calculated both the quantity in gallons and cost.
+    Our hypothesis: There may be a correlation because airlines sometimes attempt to make up for delays by flying faster, hence using more fuel.
+* **Average Taxi Times** - Calculated by hour, the average amount of time planes spend taxiing along the tarmac. We calculated both departure and arrival taxi times.
+    Our hypothesis: Flights at times with more traffic spend more time between the gate and the air, leading to more delays.
+* **Average Carrier Arrival Delay** - Calculated the average arrival delay for each operating carrier.
+    Our hypothesis: Some delays are caused by staffing shortages, overbooking, or other operational issues. Airlines that have a history of longer delays will continue to have longer delays.
+
+To ensure the integrity of our validation process, these features were added in after the train/test split. Average taxi times and delays were calculated just based on the training dataset, then mapped to the test set based on scheduled flight times. The passenger and fuel averages were calculated from separate datasets and therefore were not impacted by the train/test split. 
+
+### Sampling and Model Building
+Because of the large size of the flights dataset (over 15 million observations) and the limits of our resources, we were only able to work with a small fraction of the data. Our models were train on random samples of only a few hundred thousand rows.
+
+Once we had our sample data prepared, we each selected a handful of different models to train and compare. The results of those models are below.
+
+### Results
+| Modeler | Model | RMSE | R^2 Score |
+| ------- | ----- | ---- | --------- |
+| Ben     | RidgeCV| 49.16 | .014    |
+| Ben     | XGBoost| 50.99 | -.061   |
+| Ben     | AdaBoost| 51.59 | -.087  |
+| Ben     | RandomForest| 50.91 | -.058  |
+| Ben     | ElasticNet| 49.13 | .014    |
+| Nasir   | Linear Reg| 50.75 | .064 |
+| Nasir   | SVM | 49.1 | .12 |
+| Nasir   | AdaBoost | 149.1 | -9.33 |
+
+### Challenges
+The biggest challenge with this project was dealing with our limited computing resources. The enormous file size of the original data set meant that it took a long time to export from the SQL database and then import into our notebooks. We tried rerunning things, chopping our samples down to smaller and smaller sizes until the operations were manageable.
+
+As a result, our models are all built on a small subset of the data. They would likely be more accurate if we were able to train them using significantly larger datasets.
+
+Our models also do not include weather data. This is a major factor in flight delays, but difficult to predict accurately a week in advance, so we excluded it from our feature engineering.
