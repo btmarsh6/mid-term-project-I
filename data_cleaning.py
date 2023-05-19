@@ -130,6 +130,10 @@ def import_flights_test(filepath):
     return flights_test
 
 
+
+# These two functions actually need to be applied manually to the training data so the dictionaries can be used
+# again to map onto the test data without recalculating averages.
+
 def avg_carrier_arr_delay(flights_df):
     '''
     Given flights_df dataframe, calculate the average arrival delay for each op carrier. Add this column to dataframe.
