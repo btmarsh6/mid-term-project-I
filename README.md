@@ -7,13 +7,16 @@ The goal is to predict arrival delays of commercial flights. Often, there isn't 
 <br><br>
 ## Files
 
-- **nasir_exploratory_analysis.ipynb**: Contains EDA of the flights data.
+- **nasir_exploratory_analysis_flights_1.ipynb**: Contains EDA of the flights data.
+- **nasir_exploratory_analysis_flights_2.ipynb**: More EDA
 - **nasir_modeling.ipynb**: Contains Nasir's models
 - **Ben_models2.ipynb**: Contains Ben's models
-- **data_cleaning.py**: Contains functions used for data cleaning and feature engineering.
+- **Final_Predictions.ipynb**: Running our Elastic Net model on the test data.
 - **predictions.csv**: Contains our predictions for the first week of 2020 flights using our best performing model.
-- **data_description.md**: when you need to look for any information regarding specific attributes in the data this is the file to look in.
-- **sample_submission.csv**: this file is the example of how the submission of the results should look like.
+- **data_cleaning.py**: Contains functions used for data cleaning and feature engineering.
+- **data_description.md**: Information regarding specific attributes in the data.
+- **Flight Delay Project.pptx**: Presentation slides
+
 <br><br>
 ## Data
 
@@ -61,19 +64,18 @@ Once we had our sample data prepared, we each selected a handful of different mo
 ## Results
 <br>
 
-| Modeler | Model | RMSE | R^2 Score |
-| ------- | ----- | ---- | --------- |
-| Nasir   | SVM | 49.1 | .12 |
-| Nasir   | Linear Reg| 50.75 | .064 |
-| Ben     | ElasticNet| 49.13 | .014    |
-| Ben     | RidgeCV| 49.16 | .014    |
-| Ben     | RandomForest| 50.91 | -.058  |
-| Ben     | XGBoost| 50.99 | -.061   |
-| Ben     | AdaBoost| 51.59 | -.087  |
-| Nasir   | AdaBoost | 149.1 | -9.33 |
+| Model | RMSE | R<sup>2</sup> Score |
+| ----- | ---- | --------- |
+| Linear Reg| 50.75 | .064 |
+| ElasticNet| 49.13 | .014    |
+| RidgeCV| 49.16 | .014    |
+| RandomForest| 50.91 | -.058  |
+| XGBoost| 50.99 | -.061   |
+| AdaBoost| 51.59 | -.087  |
+| AdaBoost | 149.1 | -9.33 |
 
 <br>
-As indicated by the low R^2 scores of all of our models, we were not able to producevaccurate predictions of delays. 
+As indicated by the low R<sup>2</sup> scores of all of our models, we were not able to produce accurate predictions of delays. 
 <br><br>
 
 ## Challenges

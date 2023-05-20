@@ -70,9 +70,8 @@ def clean_flights_df(filepath):
   
 
     # drop useless columns
-    flights_df.drop(columns=['fl_date', 'branded_code_share','mkt_carrier_fl_num','tail_num','op_carrier_fl_num', 'origin_airport_id','origin_city_name','dest_airport_id','dest_city_name','wheels_off', 'wheels_on','cancelled', 'air_time', 'flights','carrier_delay', 'weather_delay', 'nas_delay', 'security_delay', 'late_aircraft_delay', 'first_dep_time','total_add_gtime', 'longest_add_gtime',], inplace=True)
+    flights_df.drop(columns=[ 'fl_date','flights','branded_code_share','mkt_carrier_fl_num','tail_num','op_carrier_fl_num', 'origin_airport_id','origin_city_name','dest_airport_id','dest_city_name','wheels_off', 'wheels_on','cancelled', 'air_time','carrier_delay', 'weather_delay', 'nas_delay', 'security_delay', 'late_aircraft_delay', 'first_dep_time','total_add_gtime', 'longest_add_gtime',], inplace=True)
     return flights_df
-
 
 
 def avg_passengers(flights_df, passengers_df):
